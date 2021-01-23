@@ -1,0 +1,86 @@
+body {
+    font-family: proxima-nova, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    background: #e4f2f630;
+}
+
+.book{
+    border-radius: 0.25rem;
+    padding: 1rem 2.5rem 1rem 1rem;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    position: relative;
+    background: #FFF;
+}
+
+#sidebar{
+    width: 80%;
+    margin-bottom: 4rem;
+}
+
+#nav{
+    width: 100%;
+    padding: 2rem;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    background-color: #2fbcffcf;
+}
+
+#nav h1{
+    font-weight: 800;
+}
+
+.btn i{
+    margin-right: 0.5rem;
+}
+
+.book .delete-book{
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.book .delete-book:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.book h6{
+    font-weight: 800;
+}
+
+
+.book:hover{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+
+#book-shelf{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 15rem);
+    column-gap: 2rem;
+    row-gap: 2rem;
+}
+
+@media only screen and (max-width: 1024px){
+    #book-shelf{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+#container {
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+#addBookForm .form-group{
+    margin-bottom: 1rem;
+}
+
+.row{
+    --bs-gutter-x: 0;
+}
+
+.read-button{
+    width: 7rem;
+}
