@@ -37,14 +37,14 @@ const GameBoard = (() => {
         if(cell.classList.contains("taken")){
             return;
         }
-        cell.classList.add("taken");
 
-        GameLogic.makeMove(cell, fillCell);
+        GameLogic.makeMove(cell);
     }
 
-    const fillCell = (cell, data) => {
-        cell.appendChild(data.iconElem.cloneNode());
-        cell.dataset.symbol = data.symbol;
+    const fillCell = (cell, player) => {
+        cell.classList.add("taken");
+        cell.appendChild(player.iconElem.cloneNode());
+        cell.dataset.symbol = player.symbol;
     }
 
     const getRow = (index) => {
@@ -75,14 +75,18 @@ const GameBoard = (() => {
         gameContainer.textContent = "";
         init();
     }
+
+    const getEmptyCells = () => {
+        return gameContainer.querySelectorAll(".cell:not(.taken)");
+    }
     
 
     init();
 
-    return {getBoard, getRow, getColumn, getAcross, reset, boardFull}
+    return {getBoard, getRow, getColumn, getAcross, reset, boardFull, getEmptyCells, fillCell}
 })();
 
-const Player = (icon) => {
+const Player = (icon, isAI) => {
 
     const setIcon = () => {
         const iconElem = document.createElement("i");
@@ -98,21 +102,36 @@ const Player = (icon) => {
     const getPlayer = () => {
         return {
             iconElem: iconElem,
-            symbol: icon   
+            symbol: icon
         }
+    }
+
+    const isComputer = () => {
+        return isAI;
+    }
+
+    const makeAIMove = () => {
+        const emptyCells = GameBoard.getEmptyCells();
+        const randomNumber = Math.floor(Math.random() * (emptyCells.length - 1));  
+        const targetCell = emptyCells[randomNumber];
+        
+        GameBoard.fillCell(targetCell, getPlayer())
+        GameLogic.changePlayer();
     }
 
     const iconElem = setIcon();
 
-    return{getPlayer};
+    return{getPlayer, isComputer, makeAIMove};
 };
 
 const GameLogic = (() => {
-    const playerOne = Player("cross");
-    const playerTwo = Player("circle");
+    const playerOne = Player("cross", false);
+    const playerTwo = Player("circle", true);
+
     let currentPlayer;
     let gameOver = false;
     let boardFull = false;
+    let againstAI = true;
 
     const init = () => {
         currentPlayer = playerOne;
@@ -120,10 +139,10 @@ const GameLogic = (() => {
         displayMessage("move");
     }
     
-    const makeMove = (cell, fillCell) => {
+    const makeMove = (cell) => {
         if(!gameOver){
             const player = currentPlayer.getPlayer();
-            fillCell(cell, player);
+            GameBoard.fillCell(cell, player)
             checkBoardState(cell.dataset.x, cell.dataset.y, player.symbol);
             if(gameOver){
                 displayMessage("victory");
@@ -141,7 +160,8 @@ const GameLogic = (() => {
         const gameMessages = {
             victory: `${currentPlayer.getPlayer().symbol} wins! Congrats.`,
             tie: `Game over. It's a tie!`,
-            move: `${currentPlayer.getPlayer().symbol}, your move!`
+            move: `${currentPlayer.getPlayer().symbol}, your move!`,
+            thinking: `${currentPlayer.getPlayer().symbol} is thinking...`
         }
     
         const display = document.querySelector(".game-status");
@@ -153,6 +173,11 @@ const GameLogic = (() => {
         currentPlayer === playerOne ? currentPlayer = playerTwo : currentPlayer = playerOne;
         getPlayerDisplay(currentPlayer).classList.add("active");
         displayMessage("move");
+
+        if(currentPlayer.isComputer()){
+            displayMessage("thinking");
+            window.setTimeout(currentPlayer.makeAIMove, 2000);
+        } 
     }
 
     const getPlayerDisplay = (player) => {
@@ -205,7 +230,7 @@ const GameLogic = (() => {
 
     init();
 
-    return{makeMove, restart}
+    return{makeMove, restart, changePlayer}
 
 })();
 
