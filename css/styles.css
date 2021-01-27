@@ -1,9 +1,8 @@
 #container{
-    width: 600px;
-    height: 600px;
+    width: 700px;
+    height: 700px;
     margin: 0 auto;
     text-align: center;
-
 }
 
 #game-board{
@@ -51,3 +50,24 @@
     margin-top: 1rem;
     width: 20rem;
 }
+
+@media only screen and (max-width: 1024px) {
+    #container{
+        width: 90vw;
+        height: 90vw;
+    }
+
+    .player-info i{
+        font-size: 1.5rem;
+        margin:0.5rem;
+    }
+
+    .game-status{
+        font-size: 4rem;
+    }
+
+    #reset-btn{
+        font-size: 2rem;
+        margin-top: 2rem;
+    }
+  }
